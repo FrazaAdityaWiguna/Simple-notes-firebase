@@ -2,7 +2,7 @@ const initialState = {
   popup: false,
   isLogin: false,
   isLoading: false,
-  user: "Raja",
+  user: {},
 };
 
 const reducer = (state = initialState, action) => {

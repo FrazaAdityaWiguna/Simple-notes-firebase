@@ -1,23 +1,61 @@
 import firebase from "../../firebase";
 
 export const registerUserAPI = (data) => (dispatch) => {
-  dispatch({ type: "CHANGE_LOADING", value: true });
-  return firebase
-    .auth()
-    .createUserWithEmailAndPassword(data.email, data.password)
-    .then((userCredential) => {
-      // Signed in
-      var user = userCredential.user;
-      // ...
-      console.log("user", user);
-      dispatch({ type: "CHANGE_LOADING", value: false });
-    })
-    .catch((error) => {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // ..
-      console.log(errorCode);
-      console.log(errorMessage);
-      dispatch({ type: "CHANGE_LOADING", value: false });
-    });
+  return new Promise((resolve, reject) => {
+    dispatch({ type: "CHANGE_LOADING", value: true });
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(data.email, data.password)
+      .then((userCredential) => {
+        // Signed in
+        var user = userCredential.user;
+        // ...
+        console.log("Success", user);
+        dispatch({ type: "CHANGE_LOADING", value: false });
+        resolve(true);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ..
+        console.log(errorCode);
+        console.log(errorMessage);
+        dispatch({ type: "CHANGE_LOADING", value: false });
+        reject(false);
+      });
+  });
+};
+
+export const loginUserAPI = (data) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    dispatch({ type: "CHANGE_LOADING", value: true });
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(data.email, data.password)
+      .then((userCredential) => {
+        // Signed in
+        var user = userCredential.user;
+        let dataUser = {
+          email: user.email,
+          uid: user.uid,
+          emailVerif: user.emailVerified,
+        };
+        // ...
+        console.log("Success", dataUser);
+        dispatch({ type: "CHANGE_LOADING", value: false });
+        dispatch({ type: "CHANGE_ISLOGIN", value: true });
+        dispatch({ type: "CHANGE_USER", value: dataUser });
+        resolve(true);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ..
+        console.log(errorCode);
+        console.log(errorMessage);
+        dispatch({ type: "CHANGE_LOADING", value: false });
+        dispatch({ type: "CHANGE_ISLOGIN", value: false });
+        reject(false);
+      });
+  });
 };
