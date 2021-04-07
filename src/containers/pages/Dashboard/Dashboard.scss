@@ -1,0 +1,85 @@
+.dashboard-container{
+  background-color: #ffa900;
+  width: 100%;
+  min-height: 100vh;
+}
+.input-container{
+  width: 600px;
+  height: 300px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.title-input{
+  margin-bottom: 20px;
+}
+
+.input-title,
+.input-content{
+  width: 500px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #000;
+
+  &:focus{
+    outline: none;
+    box-shadow: 0 0 5px #808080;
+  }
+}
+
+.input-content {
+  height: 100px;
+}
+
+.btnSave{
+  height: 40px;
+  width: 100px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #24245a;
+  color: #fff;
+  transition: all .3s ease;
+
+  &:hover{
+    background:#01e2e2;
+    color: #000;
+  }
+
+  &:focus{
+    outline: none;
+  }
+}
+
+hr {
+  width: 1000px;
+  margin: auto;
+  border: 1px solid #000;
+}
+
+.notes-card{
+  width: 1000px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .8);
+  border-radius: 10px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  padding: 20px;
+
+}
+
+.notes-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.notes-content {
+  margin-top: 20px;
+}

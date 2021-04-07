@@ -1,4 +1,4 @@
-import firebase from "../../firebase";
+import firebase, { database } from "../../firebase";
 
 export const registerUserAPI = (data) => (dispatch) => {
   return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ export const registerUserAPI = (data) => (dispatch) => {
         // Signed in
         var user = userCredential.user;
         // ...
-        console.log("Success", user);
+        // console.log("Success", user);
         dispatch({ type: "CHANGE_LOADING", value: false });
         resolve(true);
       })
@@ -39,6 +39,7 @@ export const loginUserAPI = (data) => (dispatch) => {
           email: user.email,
           uid: user.uid,
           emailVerif: user.emailVerified,
+          refreshToken: user.refreshToken,
         };
         // ...
         console.log("Success", dataUser);
@@ -57,5 +58,13 @@ export const loginUserAPI = (data) => (dispatch) => {
         dispatch({ type: "CHANGE_ISLOGIN", value: false });
         reject(false);
       });
+  });
+};
+
+export const addDataToAPI = (data) => (dispatch) => {
+  database.ref("notes/" + data.userid).push({
+    title: data.title,
+    content: data.content,
+    date: data.date,
   });
 };
