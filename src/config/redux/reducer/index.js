@@ -3,6 +3,7 @@ const initialState = {
   isLogin: false,
   isLoading: false,
   user: {},
+  notes: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -28,6 +29,12 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       isLoading: action.value,
+    };
+  }
+  if (action.type === "SET_NOTES") {
+    return {
+      ...state,
+      notes: action.value,
     };
   }
   return state;

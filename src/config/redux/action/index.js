@@ -68,3 +68,22 @@ export const addDataToAPI = (data) => (dispatch) => {
     date: data.date,
   });
 };
+
+export const getDataFromAPI = (userId) => (dispatch) => {
+  const urlNotes = database.ref("notes/" + userId);
+  return new Promise((resolve, reject) => {
+    urlNotes.on("value", (snapshot) => {
+      const data = snapshot.val();
+      const dataChangeArray = [];
+      Object.keys(data).map((key) => {
+        dataChangeArray.push({
+          id: key,
+          dataChangeArray: data[key],
+        });
+      });
+
+      dispatch({ type: "SET_NOTES", value: dataChangeArray });
+      resolve(data);
+    });
+  });
+};

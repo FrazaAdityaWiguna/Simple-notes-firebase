@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { addDataToAPI } from "../../../config/redux/action";
+import { addDataToAPI, getDataFromAPI } from "../../../config/redux/action";
 import "./Dashboard.scss";
 
 export class Dashboard extends Component {
@@ -11,19 +11,20 @@ export class Dashboard extends Component {
   };
 
   componentDidMount() {
-    const userdata = localStorage.getItem("userData");
-    console.log("dashboard", JSON.parse(userdata));
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    this.props.getNotes(userData.uid);
   }
 
   handleSaveNotes = () => {
     const { title, content } = this.state;
     const { saveNote } = this.props;
+    const userData = JSON.parse(localStorage.getItem("userData"));
 
     const data = {
       title: title,
       content: content,
       date: new Date().getTime(),
-      userid: this.props.userData.uid,
+      userid: userData.uid,
     };
 
     saveNote(data);
@@ -38,6 +39,8 @@ export class Dashboard extends Component {
 
   render() {
     const { title, content } = this.state;
+    const { notes } = this.props;
+    console.log("notes", notes);
     return (
       <div className="dashboard-container">
         <div className="input-container">
@@ -49,11 +52,19 @@ export class Dashboard extends Component {
           </button>
         </div>
         <hr />
-        <div className="notes-card">
-          <p className="notes-title">Title</p>
-          <p className="notes-date">22 Feb 2021</p>
-          <p className="notes-content">Content Notes</p>
-        </div>
+        {notes.length > 0 ? (
+          <Fragment>
+            {notes.map((note) => {
+              return (
+                <div className="notes-card" key={note.id}>
+                  <p className="notes-title">{note.dataChangeArray.title}</p>
+                  <p className="notes-date">{note.dataChangeArray.date}</p>
+                  <p className="notes-content">{note.dataChangeArray.content}</p>
+                </div>
+              );
+            })}
+          </Fragment>
+        ) : null}
       </div>
     );
   }
@@ -61,10 +72,12 @@ export class Dashboard extends Component {
 
 const reduxState = (state) => ({
   userData: state.user,
+  notes: state.notes,
 });
 
 const reduxDispatch = (dispatch) => ({
   saveNote: (data) => dispatch(addDataToAPI(data)),
+  getNotes: (data) => dispatch(getDataFromAPI(data)),
 });
 
 export default connect(reduxState, reduxDispatch)(Dashboard);
