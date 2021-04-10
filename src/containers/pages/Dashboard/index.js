@@ -10,6 +10,11 @@ export class Dashboard extends Component {
     date: "",
   };
 
+  componentDidMount() {
+    const userdata = localStorage.getItem("userData");
+    console.log("dashboard", JSON.parse(userdata));
+  }
+
   handleSaveNotes = () => {
     const { title, content } = this.state;
     const { saveNote } = this.props;
@@ -32,7 +37,7 @@ export class Dashboard extends Component {
   };
 
   render() {
-    const { title, content, date } = this.state;
+    const { title, content } = this.state;
     return (
       <div className="dashboard-container">
         <div className="input-container">
