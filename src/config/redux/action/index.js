@@ -8,15 +8,15 @@ export const registerUserAPI = (data) => (dispatch) => {
       .createUserWithEmailAndPassword(data.email, data.password)
       .then((userCredential) => {
         // Signed in
-        var user = userCredential.user;
+        // let user = userCredential.user;
         // ...
         // console.log("Success", user);
         dispatch({ type: "CHANGE_LOADING", value: false });
         resolve(true);
       })
       .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        let errorCode = error.code;
+        let errorMessage = error.message;
         // ..
         console.log(errorCode);
         console.log(errorMessage);
@@ -34,7 +34,7 @@ export const loginUserAPI = (data) => (dispatch) => {
       .signInWithEmailAndPassword(data.email, data.password)
       .then((userCredential) => {
         // Signed in
-        var user = userCredential.user;
+        let user = userCredential.user;
         let dataUser = {
           email: user.email,
           uid: user.uid,
@@ -49,8 +49,8 @@ export const loginUserAPI = (data) => (dispatch) => {
         resolve(dataUser);
       })
       .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        let errorCode = error.code;
+        let errorMessage = error.message;
         // ..
         console.log(errorCode);
         console.log(errorMessage);
@@ -85,5 +85,26 @@ export const getDataFromAPI = (userId) => (dispatch) => {
       dispatch({ type: "SET_NOTES", value: dataChangeArray });
       resolve(data);
     });
+  });
+};
+
+export const updateDataFromAPI = (data) => (dispatch) => {
+  const urlNotes = database.ref(`notes/${data.userid}/${data.noteId}`);
+
+  return new Promise((resolve, reject) => {
+    urlNotes.set(
+      {
+        title: data.title,
+        content: data.content,
+        date: data.date,
+      },
+      (err) => {
+        if (err) {
+          reject(false);
+        } else {
+          resolve(true);
+        }
+      }
+    );
   });
 };
