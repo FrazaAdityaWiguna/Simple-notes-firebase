@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { addDataToAPI, getDataFromAPI, updateDataFromAPI } from "../../../config/redux/action";
+import { addDataToAPI, getDataFromAPI, updateDataFromAPI, deleteDataFromAPI } from "../../../config/redux/action";
 import "./Dashboard.scss";
 
 export class Dashboard extends Component {
@@ -8,6 +8,7 @@ export class Dashboard extends Component {
     title: "",
     content: "",
     date: "",
+    resultDate: "",
     textButton: "Simpan",
     noteId: "",
   };
@@ -22,24 +23,35 @@ export class Dashboard extends Component {
     const { saveNote, updateNotes } = this.props;
     const userData = JSON.parse(localStorage.getItem("userData"));
 
+    // Time
+    let time = new Date();
+    console.log(time);
+    let times = new Date(time);
+    let options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    };
+    let result = times.toLocaleDateString("id", options);
+
     const data = {
       title: title,
       content: content,
       date: new Date().getTime(),
       userid: userData.uid,
+      resultDate: result,
     };
+
+    console.log(data);
 
     if (textButton === "Simpan") {
       saveNote(data);
     } else {
       data.noteId = noteId;
-      console.log("handleSaveNotes-noteId", noteId);
-      console.log("data.noteId", data.noteId);
-      console.log("data.userid", data.userid);
       updateNotes(data);
     }
 
-    console.log(data);
     this.setState({
       title: "",
       content: "",
@@ -54,7 +66,6 @@ export class Dashboard extends Component {
   };
 
   updateNotes = (note) => {
-    console.log("updateNotes", note);
     this.setState({
       title: note.dataChangeArray.title,
       content: note.dataChangeArray.content,
@@ -71,10 +82,21 @@ export class Dashboard extends Component {
     });
   };
 
+  deleteNote = (e, note) => {
+    e.stopPropagation();
+    const { deleteNotes } = this.props;
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const data = {
+      userId: userData.uid,
+      noteId: note.id,
+    };
+    deleteNotes(data);
+  };
+
   render() {
     const { title, content, textButton } = this.state;
     const { notes } = this.props;
-    const { updateNotes, handleSaveNotes, cancelUpdate } = this;
+    const { updateNotes, handleSaveNotes, cancelUpdate, deleteNote } = this;
     // console.log("notes", notes);
     return (
       <div className="dashboard-container">
@@ -104,6 +126,9 @@ export class Dashboard extends Component {
                   <p className="notes-title">{note.dataChangeArray.title}</p>
                   <p className="notes-date">{note.dataChangeArray.date}</p>
                   <p className="notes-content">{note.dataChangeArray.content}</p>
+                  <div className="delete-btn" onClick={(e) => deleteNote(e, note)}>
+                    x
+                  </div>
                 </div>
               );
             })}
@@ -123,6 +148,7 @@ const reduxDispatch = (dispatch) => ({
   saveNote: (data) => dispatch(addDataToAPI(data)),
   getNotes: (data) => dispatch(getDataFromAPI(data)),
   updateNotes: (data) => dispatch(updateDataFromAPI(data)),
+  deleteNotes: (data) => dispatch(deleteDataFromAPI(data)),
 });
 
 export default connect(reduxState, reduxDispatch)(Dashboard);

@@ -65,7 +65,7 @@ export const addDataToAPI = (data) => (dispatch) => {
   database.ref("notes/" + data.userid).push({
     title: data.title,
     content: data.content,
-    date: data.date,
+    date: data.resultDate,
   });
 };
 
@@ -90,13 +90,12 @@ export const getDataFromAPI = (userId) => (dispatch) => {
 
 export const updateDataFromAPI = (data) => (dispatch) => {
   const urlNotes = database.ref(`notes/${data.userid}/${data.noteId}`);
-
   return new Promise((resolve, reject) => {
     urlNotes.set(
       {
         title: data.title,
         content: data.content,
-        date: data.date,
+        date: data.resultDate,
       },
       (err) => {
         if (err) {
@@ -106,5 +105,12 @@ export const updateDataFromAPI = (data) => (dispatch) => {
         }
       }
     );
+  });
+};
+
+export const deleteDataFromAPI = (data) => (dispatch) => {
+  const urlNotes = database.ref(`notes/${data.userId}/${data.noteId}`);
+  return new Promise((resolve, reject) => {
+    urlNotes.remove();
   });
 };

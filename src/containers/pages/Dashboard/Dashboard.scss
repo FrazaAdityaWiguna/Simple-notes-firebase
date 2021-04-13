@@ -85,6 +85,7 @@ hr {
   background: #fff;
   padding: 20px;
   transition:  all ease .3s;
+  position: relative;
 
   &:hover{
     cursor: pointer;
@@ -101,4 +102,21 @@ hr {
 
 .notes-content {
   margin-top: 20px;
+}
+
+
+.delete-btn {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -3px;
+  right: 10px;
+  color: #24245a;
+  font-size: 25px;
+  border-radius: 50%;
+
+  &:hover{
+    color: red;
+  }
 }
